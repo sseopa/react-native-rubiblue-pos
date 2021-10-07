@@ -35,43 +35,30 @@ public class RNReactNativeRubibluePosModule extends ReactContextBaseJavaModule {
     final FontSize size = FontSize.MEDIUM;
     final FontStyle style = FontStyle.NORMAL;
     final String receiptContent = receiptText;
-    try{
-      LatticePrinter latticePrinter = WeiposImpl.as().openLatticePrinter();
 
-      String[] receiptContents = receiptContent.split("\\|");
-      if(receiptContents.length > 0){
-        for (String line : receiptContents) {
-          latticePrinter.printText(line, LatticePrinter.FontFamily.SONG, size, style);
-          latticePrinter.printText("\n",LatticePrinter.FontFamily.SONG, size, style);
-        }
-      }else {
-        latticePrinter.printText(receiptContent, LatticePrinter.FontFamily.SONG, size, style);
-      }
-      latticePrinter.submitPrint();
-    }
-    catch (Exception e){
       WeiposImpl.as().init(this.reactContext, new OnInitListener() {
         @Override
         public void onInitOk() {
-          String deviceInfo = WeiposImpl.as().getDeviceInfo();
-          LatticePrinter latticePrinter = WeiposImpl.as().openLatticePrinter();
+            String deviceInfo = WeiposImpl.as().getDeviceInfo();
+            LatticePrinter latticePrinter = WeiposImpl.as().openLatticePrinter();
 
-          String[] receiptContents = receiptContent.split("\\|");
-          if(receiptContents.length > 0){
-            for (String line : receiptContents) {
-              latticePrinter.printText(line, LatticePrinter.FontFamily.SONG, size, style);
-              latticePrinter.printText("\n",LatticePrinter.FontFamily.SONG, size, style);
+            String[] receiptContents = receiptContent.split("\\|");
+            if (receiptContents.length > 0) {
+              for (String line : receiptContents) {
+                latticePrinter.printText(line, LatticePrinter.FontFamily.SONG, size, style);
+                latticePrinter.printText("\n", LatticePrinter.FontFamily.SONG, size, style);
+              }
+            } else {
+              latticePrinter.printText(receiptContent, LatticePrinter.FontFamily.SONG, size, style);
             }
-          }else {
-            latticePrinter.printText(receiptContent, LatticePrinter.FontFamily.SONG, size, style);
-          }
-          latticePrinter.submitPrint();
-
+            latticePrinter.submitPrint();
+            WeiposImpl.as().destroy();
         }
 
         @Override
         public void onError(String s) {
           //listener.onInitializeError(new Error(s));
+          WeiposImpl.as().destroy();
         }
 
         @Override
@@ -79,7 +66,7 @@ public class RNReactNativeRubibluePosModule extends ReactContextBaseJavaModule {
           // listener.onPrinterClosed("");
         }
       });
-    }
+
 
   }
 }
