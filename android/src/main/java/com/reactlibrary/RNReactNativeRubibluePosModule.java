@@ -38,18 +38,30 @@ public class RNReactNativeRubibluePosModule extends ReactContextBaseJavaModule {
     WeiposImpl.as().init(this.reactContext, new OnInitListener() {
       @Override
       public void onInitOk() {
-          String deviceInfo = WeiposImpl.as().getDeviceInfo();
-        LatticePrinter latticePrinter = WeiposImpl.as().openLatticePrinter();
-        latticePrinter.printText(receiptContent, LatticePrinter.FontFamily.SONG, size, style);
-        latticePrinter.submitPrint();
+          RunPrintJob();
 
       }
 
       @Override
       public void onError(String s) {
         //listener.onInitializeError(new Error(s));
+        RunPrintJob();
       }
 
+  public void RunPrintJob(){
+    String deviceInfo = WeiposImpl.as().getDeviceInfo();
+    LatticePrinter latticePrinter = WeiposImpl.as().openLatticePrinter();
+    String[] receiptContents = receiptContent.split("/n", 0);
+    for (String line : receiptContents) {
+      latticePrinter.printText(line, LatticePrinter.FontFamily.SONG, size, style);
+      latticePrinter.printText("\n", FontFamily.SONG,
+              FontSize.MEDIUM, FontStyle.NORMAL);
+    }
+    if(receiptContents.length == 0) {
+      latticePrinter.printText(receiptContent, LatticePrinter.FontFamily.SONG, size, style);
+    }
+    latticePrinter.submitPrint();
+  }
       @Override
       public void onDestroy() {
         // listener.onPrinterClosed("");
